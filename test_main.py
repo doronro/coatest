@@ -29,11 +29,12 @@ class TestRootEndpoint:
         )
 
     def test_response_body_structure(self):
-        """Response body must be a JSON object with a 'message' key."""
+        """Response body must be a JSON object with 'message' and 'subtitle' keys."""
         response = client.get("/")
         body = response.json()
         assert isinstance(body, dict), f"Expected dict, got {type(body)}"
         assert "message" in body, f"'message' key missing from response: {body}"
+        assert "subtitle" in body, f"'subtitle' key missing from response: {body}"
 
     def test_response_body_value(self):
         """The 'message' value must be exactly 'Hello World'."""
@@ -43,11 +44,20 @@ class TestRootEndpoint:
             f"Expected 'Hello World', got '{body.get('message')}'"
         )
 
+    def test_subtitle_field_value(self):
+        """The 'subtitle' value must be exactly 'Version Test'."""
+        response = client.get("/")
+        body = response.json()
+        assert "subtitle" in body, f"'subtitle' key missing from response: {body}"
+        assert body["subtitle"] == "Version Test", (
+            f"Expected 'Version Test', got '{body.get('subtitle')}'"
+        )
+
     def test_no_extra_keys_in_response(self):
         """Response should contain only the expected keys (no accidental leakage)."""
         response = client.get("/")
         body = response.json()
-        expected_keys = {"message"}
+        expected_keys = {"message", "subtitle"}
         extra_keys = set(body.keys()) - expected_keys
         assert not extra_keys, f"Unexpected extra keys in response: {extra_keys}"
 
