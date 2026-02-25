@@ -3,6 +3,10 @@ QA Test Suite for FastAPI Hello World Application
 Tests the GET "/" endpoint for correctness, response shape, and HTTP compliance.
 """
 
+import os
+
+os.environ["ENABLE_DOCS"] = "true"
+
 import pytest
 from fastapi.testclient import TestClient
 from main import app
